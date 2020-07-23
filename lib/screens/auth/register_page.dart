@@ -122,6 +122,7 @@ class RegisterScreen extends StatelessWidget {
       child: MaterialButton(
         onPressed: () {
           print('register...');
+          Navigator.pushReplacementNamed(context, '/restaurants');
         },
         color: Theme.of(context).primaryColor,
         child: Text('CADASTRAR'),
