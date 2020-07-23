@@ -113,8 +113,8 @@ class LoginScreen extends StatelessWidget {
   Widget _textRegister(context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => RegisterScreen()));
+        //Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterScreen()));
+        Navigator.pushNamed(context, '/register');
       },
       child: Text(
         'Cadastrar-se',
