@@ -76,6 +76,11 @@ class OrdersScreen extends StatelessWidget {
       ),
       onTap: () {
         print(order.identify);
+        Navigator.pushNamed(
+          context,
+          '/order-details',
+          arguments: order.identify,
+        );
       },
     );
   }
