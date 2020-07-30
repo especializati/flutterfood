@@ -21,11 +21,17 @@ class FlutterFoodBottomNavigator extends StatelessWidget {
       ],
       onTap: (index) {
         switch (index) {
+          case 0:
+            Navigator.pushReplacementNamed(context, '/restaurants');
+            break;
           case 1:
             Navigator.pushReplacementNamed(context, '/my-orders');
             break;
           case 2:
             Navigator.pushReplacementNamed(context, '/cart');
+            break;
+          case 3:
+            Navigator.pushReplacementNamed(context, '/profile');
             break;
           default:
             Navigator.pushReplacementNamed(context, '/restaurants');
