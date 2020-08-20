@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterfood/data/network/dio_client.dart';
+import 'package:flutterfood/data/network/repositories/restaurant_repository.dart';
 
 import '../../models/Restaurant.dart';
 import './widgets/RestaurantCard.dart';
@@ -62,12 +63,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   void getRestaurants() async {
     setState(() => isLoading = true);
 
-    final response = await DioClient().get('v1/tenants');
-    final restaurants = (response.data['data'] as List).map((restaurant) {
-      //_restaurants.add(Restaurant.fromJson(restaurant));
-      //print('------------------------');
-      return Restaurant.fromJson(restaurant);
-    }).toList();
+    final restaurants = await ResturantRepository().getRestaurants();
 
     setState(() {
       _restaurants.addAll(restaurants);
