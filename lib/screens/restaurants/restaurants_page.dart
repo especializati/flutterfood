@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterfood/data/network/dio_client.dart';
-import 'package:flutterfood/data/network/repositories/restaurant_repository.dart';
 
+import '../../data/network/repositories/restaurant_repository.dart';
+import '../../widgets/custom_circular_progress_indicator.dart';
 import '../../models/Restaurant.dart';
 import './widgets/RestaurantCard.dart';
 import '../../widgets/flutter_bottom_navigator.dart';
@@ -36,8 +36,11 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body:
-          isLoading ? CircularProgressIndicator() : _buildRestaurants(context),
+      body: isLoading
+          ? CustomCircularProgressIndicator(
+              textLabel: 'Carregando os restaurantes',
+            )
+          : _buildRestaurants(context),
       bottomNavigationBar: FlutterFoodBottomNavigator(0),
     );
   }
@@ -49,12 +52,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         itemBuilder: (context, index) {
           final Restaurant restaurant = _restaurants[index];
 
-          return RestaurantCard(
-            uuid: restaurant.uuid,
-            name: restaurant.name,
-            image: restaurant.image,
-            contact: restaurant.contact,
-          );
+          return RestaurantCard(restaurant: restaurant);
         },
       ),
     );

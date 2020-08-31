@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class RestaurantCard extends StatelessWidget {
-  final String uuid;
-  final String name;
-  final String image;
-  final String contact;
+import '../../../models/Restaurant.dart';
 
-  RestaurantCard({this.uuid, this.name, this.image, this.contact});
+class RestaurantCard extends StatelessWidget {
+  final Restaurant restaurant;
+
+  RestaurantCard({
+    this.restaurant,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print(name);
-        Navigator.pushNamed(context, '/foods');
+        print(restaurant.name);
+        Navigator.pushNamed(context, '/foods', arguments: restaurant);
       },
       child: Container(
         padding: EdgeInsets.only(top: 4, right: 1, left: 1),
@@ -36,8 +37,8 @@ class RestaurantCard extends StatelessWidget {
                       child: ClipOval(
                         //child: Image.asset('assets/images/IconeFlutterFood.png'),
                         child: CachedNetworkImage(
-                          imageUrl: image != ''
-                              ? image
+                          imageUrl: restaurant.image != ''
+                              ? restaurant.image
                               : 'http://10.0.2.2/imgs/IconeFlutterFood.png',
                           placeholder: (context, url) => Container(
                             height: 80,
@@ -55,7 +56,7 @@ class RestaurantCard extends StatelessWidget {
                     VerticalDivider(color: Colors.black54),
                     Expanded(
                         child: Text(
-                      name,
+                      restaurant.name,
                       style: TextStyle(
                           color: Colors.black54, fontWeight: FontWeight.bold),
                     ))

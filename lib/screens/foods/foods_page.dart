@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../models/Category.dart';
 import '../../models/Food.dart';
+import '../../models/Restaurant.dart';
 import './widgets/Categories.dart';
 import '../../widgets/food_card.dart';
 import '../../widgets/flutter_bottom_navigator.dart';
+import '../../stores/foods.store.dart';
+import '../../widgets/custom_circular_progress_indicator.dart';
 
 class FoodsScreen extends StatefulWidget {
   FoodsScreen({Key key}) : super(key: key);
@@ -14,48 +18,31 @@ class FoodsScreen extends StatefulWidget {
 }
 
 class _FoodsScreenState extends State<FoodsScreen> {
+  Restaurant _restaurant;
+  FoodsStore storeFoods = new FoodsStore();
+
   List<Category> _categories = [
     Category(name: 'Salgados', description: 'sdd', identify: 'dssfs'),
     Category(name: 'Refri', description: 'sdd', identify: 'dssfs'),
     Category(name: 'Doces', description: 'sdd', identify: 'dssfs'),
     Category(name: 'Pizzas', description: 'sdd', identify: 'dssfs'),
   ];
-  List<Food> _foods = [
-    Food(
-        identify: 'asds',
-        image:
-            'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/6ZyL7DMASrQAfvggPRfc6WxEFJVbT4hmQIVMnYCe.png',
-        description: 'Apenas um teste',
-        price: '12.2',
-        title: 'Comida Japonesa'),
-    Food(
-        identify: 'asds3',
-        image:
-            'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/w0XphjnLbQJOSdRycJsYQIVDqHnET5RX2YFsdq6K.png',
-        description: 'Apenas um teste',
-        price: '14.2',
-        title: 'Sanduíche'),
-    Food(
-        identify: 'asds2',
-        image:
-            'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/EIb2oEnQgAabrk2OkXeb6BAAGW680H8CPzpdJBgG.png',
-        description: 'Apenas um teste',
-        price: '15.2',
-        title: 'Açaí'),
-    Food(
-        identify: 'asds43',
-        image:
-            'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/4mnaq2bMcOBA0JrdxDwZhxMibpy1M1DrMpSejwMG.png',
-        description: 'Apenas um teste',
-        price: '16.2',
-        title: 'Pizza')
-  ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    RouteSettings settings = ModalRoute.of(context).settings;
+    _restaurant = settings.arguments;
+
+    storeFoods.getFoods(_restaurant.uuid);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('EspecializaTi Res'),
+        title: Text('${_restaurant.name}'),
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -66,29 +53,46 @@ class _FoodsScreenState extends State<FoodsScreen> {
 
   Widget _buildScreen() {
     return Column(
-      children: <Widget>[Categories(_categories), _buildFoods()],
+      children: <Widget>[
+        Categories(_categories),
+        Observer(
+          builder: (context) {
+            return storeFoods.isLoading
+                ? CustomCircularProgressIndicator(
+                    textLabel: 'Carregando os produtos...',
+                  )
+                : storeFoods.foods.length == 0
+                    ? Center(
+                        child: Text(
+                          'Nenhum Produto',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
+                    : _buildFoods();
+          },
+        ),
+      ],
     );
   }
 
   Widget _buildFoods() {
     return Container(
-      height: (MediaQuery.of(context).size.height - 190),
-      width: MediaQuery.of(context).size.width,
-      //color: Colors.black,
-      child: ListView.builder(
-          itemCount: _foods.length,
-          itemBuilder: (context, index) {
-            final Food food = _foods[index];
+        height: (MediaQuery.of(context).size.height - 190),
+        width: MediaQuery.of(context).size.width,
+        //color: Colors.black,
+        child: ListView.builder(
+            itemCount: storeFoods.foods.length,
+            itemBuilder: (context, index) {
+              final Food food = storeFoods.foods[index];
 
-            return FoodCard(
-              identify: food.identify,
-              description: food.description,
-              image: food.image,
-              price: food.price,
-              title: food.title,
-              notShowIconCart: false,
-            );
-          }),
-    );
+              return FoodCard(
+                identify: food.identify,
+                description: food.description,
+                image: food.image,
+                price: food.price,
+                title: food.title,
+                notShowIconCart: false,
+              );
+            }));
   }
 }
