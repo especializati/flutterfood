@@ -9,6 +9,7 @@ import '../../widgets/food_card.dart';
 import '../../widgets/flutter_bottom_navigator.dart';
 import '../../stores/foods.store.dart';
 import '../../widgets/custom_circular_progress_indicator.dart';
+import '../../stores/categories.store.dart';
 
 class FoodsScreen extends StatefulWidget {
   FoodsScreen({Key key}) : super(key: key);
@@ -20,13 +21,7 @@ class FoodsScreen extends StatefulWidget {
 class _FoodsScreenState extends State<FoodsScreen> {
   Restaurant _restaurant;
   FoodsStore storeFoods = new FoodsStore();
-
-  List<Category> _categories = [
-    Category(name: 'Salgados', description: 'sdd', identify: 'dssfs'),
-    Category(name: 'Refri', description: 'sdd', identify: 'dssfs'),
-    Category(name: 'Doces', description: 'sdd', identify: 'dssfs'),
-    Category(name: 'Pizzas', description: 'sdd', identify: 'dssfs'),
-  ];
+  CategoriesStore storeCategories = new CategoriesStore();
 
   @override
   void didChangeDependencies() {
@@ -35,6 +30,7 @@ class _FoodsScreenState extends State<FoodsScreen> {
     RouteSettings settings = ModalRoute.of(context).settings;
     _restaurant = settings.arguments;
 
+    storeCategories.getCategories(_restaurant.uuid);
     storeFoods.getFoods(_restaurant.uuid);
   }
 
@@ -54,7 +50,22 @@ class _FoodsScreenState extends State<FoodsScreen> {
   Widget _buildScreen() {
     return Column(
       children: <Widget>[
-        Categories(_categories),
+        Observer(
+          builder: (context) {
+            return storeCategories.isLoading
+                ? CustomCircularProgressIndicator(
+                    textLabel: 'Carregando as categorias...',
+                  )
+                : storeCategories.categories.length == 0
+                    ? Center(
+                        child: Text(
+                          'Nenhuma Categoria',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
+                    : Categories(storeCategories.categories);
+          },
+        ),
         Observer(
           builder: (context) {
             return storeFoods.isLoading
