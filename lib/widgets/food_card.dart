@@ -1,22 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class FoodCard extends StatelessWidget {
-  String identify;
-  String title;
-  String description;
-  String price;
-  String image;
-  bool notShowIconCart;
+import '../models/Food.dart';
 
-  FoodCard({
-    this.identify,
-    this.title,
-    this.description,
-    this.image,
-    this.price,
-    this.notShowIconCart,
-  });
+class FoodCard extends StatelessWidget {
+  bool notShowIconCart;
+  Food food;
+
+  FoodCard({this.notShowIconCart = false, this.food});
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +43,9 @@ class FoodCard extends StatelessWidget {
       margin: EdgeInsets.only(right: 8),
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl:
-              image != '' ? image : 'http://10.0.2.2/imgs/IconeFlutterFood.png',
+          imageUrl: food.image != ''
+              ? food.image
+              : 'http://10.0.2.2/imgs/IconeFlutterFood.png',
           placeholder: (context, url) => Container(
             height: 80,
             width: 80,
@@ -75,21 +67,21 @@ class FoodCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(title,
+          Text(food.title,
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               )),
           Container(height: 5),
-          Text(description,
+          Text(food.description,
               style: TextStyle(
                 color: Colors.black38,
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
               )),
           Container(height: 7),
-          Text("R\$ $price",
+          Text("R\$ ${food.price}",
               style: TextStyle(
                 color: Colors.black38,
                 fontSize: 12,

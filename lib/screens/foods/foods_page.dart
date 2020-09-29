@@ -96,14 +96,7 @@ class _FoodsScreenState extends State<FoodsScreen> {
             itemBuilder: (context, index) {
               final Food food = storeFoods.foods[index];
 
-              return FoodCard(
-                identify: food.identify,
-                description: food.description,
-                image: food.image,
-                price: food.price,
-                title: food.title,
-                notShowIconCart: false,
-              );
+              return FoodCard(food: food);
             }));
   }
 }
