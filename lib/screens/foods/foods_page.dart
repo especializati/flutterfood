@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/Category.dart';
 import '../../models/Food.dart';
@@ -20,12 +21,16 @@ class FoodsScreen extends StatefulWidget {
 
 class _FoodsScreenState extends State<FoodsScreen> {
   Restaurant _restaurant;
-  FoodsStore storeFoods = new FoodsStore();
-  CategoriesStore storeCategories = new CategoriesStore();
+  //FoodsStore storeFoods = new FoodsStore();
+  FoodsStore storeFoods;
+  CategoriesStore storeCategories;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    storeFoods = Provider.of<FoodsStore>(context);
+    storeCategories = Provider.of<CategoriesStore>(context);
 
     RouteSettings settings = ModalRoute.of(context).settings;
     _restaurant = settings.arguments;

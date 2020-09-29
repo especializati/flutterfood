@@ -17,6 +17,9 @@ abstract class _FoodsStoreBase with Store {
   ObservableList<Food> foods = ObservableList<Food>();
 
   @observable
+  ObservableList<Food> cartItems = ObservableList<Food>();
+
+  @observable
   bool isLoading = false;
 
   @action
@@ -52,4 +55,34 @@ abstract class _FoodsStoreBase with Store {
 
     response.map((food) => addFood(Food.fromJson(food))).toList();
   }
+
+  /**
+   * Cart
+   */
+  @action
+  void addFoodCart(Food food) {
+    print('addFoodCart');
+    cartItems.add(food);
+
+    foods = foods;
+  }
+
+  @action
+  void removeFoodCart(Food food) {
+    print('removeFoodCart');
+    cartItems.remove(food);
+
+    foods = foods;
+  }
+
+  @action
+  void clearCart() {
+    print('clearCart');
+    cartItems.clear();
+
+    foods = foods;
+  }
+
+  @action
+  bool inFoodCart(Food food) => cartItems.contains(food);
 }

@@ -1,11 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../stores/foods.store.dart';
 import '../models/Food.dart';
 
 class FoodCard extends StatelessWidget {
   bool notShowIconCart;
   Food food;
+
+  //FoodsStore storeFoods = new FoodsStore();
 
   FoodCard({this.notShowIconCart = false, this.food});
 
@@ -93,12 +97,22 @@ class FoodCard extends StatelessWidget {
   }
 
   Widget _buildButtonCart(context) {
+    final storeFoods = Provider.of<FoodsStore>(context);
+
     return notShowIconCart
         ? Container()
         : Container(
             child: IconTheme(
               data: IconThemeData(color: Theme.of(context).primaryColor),
-              child: Icon(Icons.shopping_cart),
+              child: storeFoods.inFoodCart(food)
+                  ? GestureDetector(
+                      onTap: () => storeFoods.removeFoodCart(food),
+                      child: Icon(Icons.remove_shopping_cart),
+                    )
+                  : GestureDetector(
+                      onTap: () => storeFoods.addFoodCart(food),
+                      child: Icon(Icons.shopping_cart),
+                    ),
             ),
           );
   }
