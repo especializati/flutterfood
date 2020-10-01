@@ -49,13 +49,14 @@ abstract class _FoodsStoreBase with Store {
   }
 
   @action
-  Future getFoods(String tokenCompany) async {
+  Future getFoods(String tokenCompany, {List<String> categoriesFilter}) async {
     clearFoods();
     clearCart();
 
     setLoading(true);
 
-    final response = await _repository.getFoods(tokenCompany);
+    final response = await _repository.getFoods(tokenCompany,
+        filterCategories: categoriesFilter);
 
     setLoading(false);
 

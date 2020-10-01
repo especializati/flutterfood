@@ -14,6 +14,12 @@ abstract class _CategoriesStoreBase with Store {
   ObservableList<Category> categories = ObservableList<Category>();
 
   @observable
+  List<String> filtersCategory = [];
+
+  @observable
+  bool filterChanged = false;
+
+  @observable
   bool isLoading = false;
 
   @action
@@ -35,9 +41,46 @@ abstract class _CategoriesStoreBase with Store {
   }
 
   @action
+  void addFilter(String identify) {
+    if (identify == 'all') {
+      return clearFilter();
+    } else {
+      filtersCategory.add(identify);
+    }
+
+    categories = categories;
+    filterChanged = !filterChanged;
+  }
+
+  @action
+  void removeFilter(String identify) {
+    if (identify != 'all') {
+      filtersCategory.remove(identify);
+    }
+
+    categories = categories;
+    filterChanged = !filterChanged;
+  }
+
+  @action
+  bool inFilter(String identify) {
+    return (identify == 'all' && filtersCategory.length == 0) ||
+        filtersCategory.contains(identify);
+  }
+
+  @action
+  void clearFilter() {
+    filtersCategory.clear();
+
+    categories = categories;
+    filterChanged = !filterChanged;
+  }
+
+  @action
   Future getCategories(String tokenCompany) async {
     setLoading(true);
     clearCategories();
+    clearFilter();
 
     final response = await repository.getCategories(tokenCompany);
 
