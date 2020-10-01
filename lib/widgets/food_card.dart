@@ -107,7 +107,10 @@ class FoodCard extends StatelessWidget {
               child: storeFoods.inFoodCart(food)
                   ? GestureDetector(
                       onTap: () => storeFoods.removeFoodCart(food),
-                      child: Icon(Icons.remove_shopping_cart),
+                      child: Icon(
+                        Icons.remove_shopping_cart,
+                        color: Colors.red,
+                      ),
                     )
                   : GestureDetector(
                       onTap: () => storeFoods.addFoodCart(food),

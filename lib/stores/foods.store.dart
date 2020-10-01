@@ -17,7 +17,10 @@ abstract class _FoodsStoreBase with Store {
   ObservableList<Food> foods = ObservableList<Food>();
 
   @observable
-  ObservableList<Food> cartItems = ObservableList<Food>();
+  List<Map<String, dynamic>> cartItems = [];
+
+  @observable
+  double totalCart = 0;
 
   @observable
   bool isLoading = false;
@@ -62,17 +65,27 @@ abstract class _FoodsStoreBase with Store {
   @action
   void addFoodCart(Food food) {
     print('addFoodCart');
-    cartItems.add(food);
 
-    foods = foods;
+    if (inFoodCart(food)) {
+      return incrementFoodCart(food);
+    }
+
+    cartItems.add({
+      'identify': food.identify,
+      'qty': 1,
+      'product': food,
+    });
+
+    calcTotalCart();
   }
 
   @action
   void removeFoodCart(Food food) {
     print('removeFoodCart');
-    cartItems.remove(food);
 
-    foods = foods;
+    cartItems.removeWhere((element) => element['identify'] == food.identify);
+
+    calcTotalCart();
   }
 
   @action
@@ -80,9 +93,53 @@ abstract class _FoodsStoreBase with Store {
     print('clearCart');
     cartItems.clear();
 
-    foods = foods;
+    calcTotalCart();
   }
 
   @action
-  bool inFoodCart(Food food) => cartItems.contains(food);
+  void incrementFoodCart(Food food) {
+    final int index =
+        cartItems.indexWhere((element) => element['identify'] == food.identify);
+
+    cartItems[index]['qty'] = cartItems[index]['qty'] + 1;
+
+    calcTotalCart();
+  }
+
+  @action
+  void decrementFoodCart(Food food) {
+    final int index =
+        cartItems.indexWhere((element) => element['identify'] == food.identify);
+
+    cartItems[index]['qty'] = cartItems[index]['qty'] - 1;
+
+    if (cartItems[index]['qty'] == 0) {
+      return removeFoodCart(food);
+    }
+
+    calcTotalCart();
+  }
+
+  @action
+  bool inFoodCart(Food food) {
+    final int index =
+        cartItems.indexWhere((element) => element['identify'] == food.identify);
+
+    return index != -1;
+  }
+
+  @action
+  double calcTotalCart() {
+    double total = 0;
+
+    cartItems.map((element) =>
+        total += element['qty'] * double.parse(element['product'].price));
+
+    totalCart = total;
+
+    foods = foods;
+    cartItems = cartItems;
+
+    return total;
+  }
 }
