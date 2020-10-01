@@ -50,6 +50,9 @@ abstract class _FoodsStoreBase with Store {
 
   @action
   Future getFoods(String tokenCompany) async {
+    clearFoods();
+    clearCart();
+
     setLoading(true);
 
     final response = await _repository.getFoods(tokenCompany);
@@ -98,6 +101,7 @@ abstract class _FoodsStoreBase with Store {
 
   @action
   void incrementFoodCart(Food food) {
+    print('incrementFoodCart');
     final int index =
         cartItems.indexWhere((element) => element['identify'] == food.identify);
 
@@ -108,6 +112,7 @@ abstract class _FoodsStoreBase with Store {
 
   @action
   void decrementFoodCart(Food food) {
+    print('decrementFoodCart');
     final int index =
         cartItems.indexWhere((element) => element['identify'] == food.identify);
 
@@ -130,11 +135,14 @@ abstract class _FoodsStoreBase with Store {
 
   @action
   double calcTotalCart() {
+    print('calcTotalCart');
     double total = 0;
 
-    cartItems.map((element) =>
-        total += element['qty'] * double.parse(element['product'].price));
-
+    cartItems
+        .map((element) =>
+            total += element['qty'] * double.parse(element['product'].price))
+        .toList();
+    print(total);
     totalCart = total;
 
     foods = foods;
