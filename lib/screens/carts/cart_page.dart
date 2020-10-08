@@ -7,16 +7,19 @@ import '../../widgets/show_image_cached_network.dart';
 import '../../models/Food.dart';
 import '../../stores/foods.store.dart';
 import '../../stores/restaurant.store.dart';
-import '../../widgets/show_image_cached_network.dart';
+import '../../stores/orders.store.dart';
 
 class CartScreen extends StatelessWidget {
   FoodsStore _foodsStore;
   RestaurantsStore _restaurantsStore;
+  OrdersStore _ordersStore;
+  TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     _foodsStore = Provider.of<FoodsStore>(context);
     _restaurantsStore = Provider.of<RestaurantsStore>(context);
+    _ordersStore = Provider.of<OrdersStore>(context);
 
     final String titlePage = _restaurantsStore.restaurant != null
         ? "Carrinho - ${_restaurantsStore.restaurant.name}"
@@ -199,6 +202,7 @@ class CartScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       child: TextFormField(
+        controller: _commentController,
         autocorrect: true,
         style: TextStyle(color: Theme.of(context).primaryColor),
         cursorColor: Theme.of(context).primaryColor,
@@ -232,14 +236,30 @@ class CartScreen extends StatelessWidget {
               blurRadius: 6,
             )
           ]),
-      child: RaisedButton(
-        onPressed: () {
-          print('checkout');
-        },
-        child: Text('Finalizar Pedido'),
-        color: Colors.transparent,
-        elevation: 0,
+      child: Observer(
+        builder: (context) => RaisedButton(
+          onPressed: () =>
+              _ordersStore.isMakingOrder ? null : _makeOrder(context),
+          child: _ordersStore.isMakingOrder
+              ? Text('Fazendo o pedido...')
+              : Text('Finalizar Pedido'),
+          color: Colors.transparent,
+          elevation: 0,
+        ),
       ),
     );
+  }
+
+  Future _makeOrder(context) async {
+    await _ordersStore.makeOrder(
+      _restaurantsStore.restaurant.uuid,
+      _foodsStore.cartItems,
+      comment: _commentController.text,
+    );
+
+    _foodsStore.clearCart();
+    _commentController.text = '';
+
+    Navigator.pushReplacementNamed(context, '/my-orders');
   }
 }
