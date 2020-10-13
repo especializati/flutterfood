@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
 
 import './login_page.dart';
 import './widgets/heading_auth.dart';
+import '../../stores/auth.store.dart';
 
 class RegisterScreen extends StatelessWidget {
   double _deviceWidth;
   double _deviceHeight;
 
+  AuthStore _authStore;
+  TextEditingController _name = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _passowrd = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    _authStore = Provider.of<AuthStore>(context);
+
     _deviceWidth = MediaQuery.of(context).size.width;
     _deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
-        child: _loginPageUI(context),
+        child: Observer(
+          builder: (context) => _registerUI(context),
+        ),
       ),
     );
   }
 
-  Widget _loginPageUI(context) {
+  Widget _registerUI(context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: _deviceWidth * 0.10),
       child: Column(
@@ -62,6 +74,7 @@ class RegisterScreen extends StatelessWidget {
 
   Widget _nameTextField(context) {
     return TextFormField(
+      controller: _name,
       autocorrect: false,
       autofocus: true,
       style: TextStyle(color: Theme.of(context).primaryColor),
@@ -81,6 +94,7 @@ class RegisterScreen extends StatelessWidget {
 
   Widget _emailTextField(context) {
     return TextFormField(
+      controller: _email,
       autocorrect: false,
       autofocus: false,
       style: TextStyle(color: Theme.of(context).primaryColor),
@@ -100,6 +114,7 @@ class RegisterScreen extends StatelessWidget {
 
   Widget _passwordTextField(context) {
     return TextFormField(
+      controller: _passowrd,
       autocorrect: false,
       autofocus: true,
       obscureText: true,
@@ -120,12 +135,9 @@ class RegisterScreen extends StatelessWidget {
     return Container(
       width: _deviceWidth,
       child: MaterialButton(
-        onPressed: () {
-          print('register...');
-          Navigator.pushReplacementNamed(context, '/restaurants');
-        },
+        onPressed: () => _authStore.isLoading ? null : register(context),
         color: Theme.of(context).primaryColor,
-        child: Text('CADASTRAR'),
+        child: Text(_authStore.isLoading ? 'Cadastrando...' : 'CADASTRAR'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
     );
@@ -142,5 +154,11 @@ class RegisterScreen extends StatelessWidget {
         style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 18.2),
       ),
     );
+  }
+
+  Future register(context) async {
+    await _authStore.register(_name.text, _email.text, _passowrd.text);
+
+    Navigator.pushReplacementNamed(context, '/restaurants');
   }
 }

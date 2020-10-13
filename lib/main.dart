@@ -7,6 +7,7 @@ import './stores/foods.store.dart';
 import './stores/categories.store.dart';
 import './stores/restaurant.store.dart';
 import './stores/orders.store.dart';
+import './stores/auth.store.dart';
 
 void main() => runApp(FlutterFoodApp());
 
@@ -26,6 +27,9 @@ class FlutterFoodApp extends StatelessWidget {
         ),
         Provider<OrdersStore>(
           create: (_) => OrdersStore(),
+        ),
+        Provider<AuthStore>(
+          create: (_) => AuthStore(),
         ),
       ],
       child: MaterialApp(
