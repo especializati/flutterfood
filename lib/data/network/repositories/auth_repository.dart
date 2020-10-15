@@ -68,9 +68,15 @@ class AuthRepository {
 
   Future logout() async {
     await DioClient().post('auth/logout');
+
+    await deleteToken();
   }
 
   Future saveToken(String token) async {
     await storage.write(key: 'token_sanctum', value: token);
+  }
+
+  Future deleteToken() async {
+    await storage.delete(key: 'token_sanctum');
   }
 }
