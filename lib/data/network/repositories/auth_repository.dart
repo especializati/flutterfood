@@ -47,6 +47,29 @@ class AuthRepository {
     }
   }
 
+  Future<User> getMe() async {
+    final String token = await storage.read(key: 'token_sanctum');
+    if (token != null) {
+      _dio.options.headers['Authorization'] = 'Bearer ' + token;
+    }
+
+    try {
+      final response = await _dio.get('auth/me');
+      print(response.data);
+
+      return User.fromJson(response.data['data']);
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e.response);
+      print(e.response.statusCode);
+      print(e.response.data);
+    }
+  }
+
+  Future logout() async {
+    await DioClient().post('auth/logout');
+  }
+
   Future saveToken(String token) async {
     await storage.write(key: 'token_sanctum', value: token);
   }
