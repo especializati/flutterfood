@@ -1,6 +1,7 @@
 import 'package:mobx/mobx.dart';
 
 import '../data/network/repositories/order_repository.dart';
+import '../data/network/repositories/evaluation_repository.dart';
 import '../models/Order.dart';
 
 part 'orders.store.g.dart';
@@ -9,6 +10,7 @@ class OrdersStore = _OrdersStoreBase with _$OrdersStore;
 
 abstract class _OrdersStoreBase with Store {
   OrderRepository _orderRepository = OrderRepository();
+  EvaluationRepository _evaluationRepository = EvaluationRepository();
 
   @observable
   bool isMakingOrder = false;
@@ -49,5 +51,15 @@ abstract class _OrdersStoreBase with Store {
     response.map((order) => add(Order.fromJson(order))).toList();
 
     isLoading = false;
+  }
+
+  @action
+  Future evaluationOrder(String orderIdentify, int stars, {String comment}) async {
+    isLoading = true;
+
+    await _evaluationRepository.evaluationOrder(orderIdentify, stars,
+        comment: comment);
+
+        isLoading = false;
   }
 }

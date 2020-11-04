@@ -107,7 +107,11 @@ class OrderDetailsScreen extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 30, top: 10),
             child: RaisedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/evaluation-order');
+                Navigator.pushNamed(
+                  context,
+                  '/evaluation-order',
+                  arguments: _order.identify,
+                );
               },
               color: Colors.orange,
               elevation: 2.2,
