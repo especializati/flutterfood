@@ -19,4 +19,10 @@ class OrderRepository {
 
     return response;
   }
+
+  Future<List<dynamic>> getMyOrders() async {
+    final response = await _httpClient.get("/auth/$API_VERSION/my-orders");
+
+    return (response.data['data'] as List).toList();
+  }
 }

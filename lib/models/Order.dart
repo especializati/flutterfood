@@ -34,7 +34,7 @@ class Order {
       identify: jsonData['identify'],
       date: jsonData['date'],
       status: jsonData['status'],
-      total: double.parse(jsonData['total']),
+      total: double.parse(jsonData['total'].toString()),
       comment: jsonData['comment'],
       foods: _foodsApi,
       evaluations: _evaluationsApi,

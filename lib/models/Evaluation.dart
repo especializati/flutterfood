@@ -13,7 +13,7 @@ class Evaluation {
     return Evaluation(
       user: User.fromJson(jsonData['client']),
       comment: jsonData['comment'],
-      stars: jsonData['stars'],
+      stars: double.parse(jsonData['stars'].toString()),
     );
   }
 

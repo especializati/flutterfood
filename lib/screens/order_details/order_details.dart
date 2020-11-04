@@ -8,44 +8,13 @@ import '../../models/Evaluation.dart';
 import '../../widgets/food_card.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
-  Order _order = Order(
-    identify: 'dsfdsfs123',
-    date: '30/02/2021',
-    status: 'open',
-    total: (90).toDouble(),
-    comment: 'Sem cebola',
-    foods: [
-      Food(
-          identify: 'asds',
-          image:
-              'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/6ZyL7DMASrQAfvggPRfc6WxEFJVbT4hmQIVMnYCe.png',
-          description: 'Apenas um teste',
-          price: '12.2',
-          title: 'Comida Japonesa'),
-      Food(
-          identify: 'asds3',
-          image:
-              'http://10.0.2.2/storage/tenants/3e73e976-6ce1-44c4-8f11-1ca4b434ea4a/products/w0XphjnLbQJOSdRycJsYQIVDqHnET5RX2YFsdq6K.png',
-          description: 'Apenas um teste',
-          price: '14.2',
-          title: 'Sanduíche')
-    ],
-    evaluations: [
-      // Evaluation(
-      //   comment: 'Pedido muito bom',
-      //   nameUser: 'Carlos',
-      //   stars: 4,
-      // ),
-      // Evaluation(
-      //   comment: 'Pedido excelente',
-      //   nameUser: 'Carlos',
-      //   stars: 5,
-      // )
-    ],
-  );
+  Order _order;
 
   @override
   Widget build(BuildContext context) {
+    RouteSettings settings = ModalRoute.of(context).settings;
+    _order = settings.arguments;
+
     return Scaffold(
       appBar: AppBar(title: Text('Detalhes do Pedido'), centerTitle: true),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -64,7 +33,9 @@ class OrderDetailsScreen extends StatelessWidget {
           _makeTextOrder('Data', _order.date),
           _makeTextOrder('Status', _order.status),
           _makeTextOrder('Total', _order.total.toString()),
-          _makeTextOrder('Comentário', _order.comment),
+          _order.comment != null
+              ? _makeTextOrder('Comentário', _order.comment)
+              : Container(),
           Container(height: 30),
           Text('Comidas:',
               style: TextStyle(
