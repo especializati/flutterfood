@@ -12,7 +12,6 @@ class OrderDetailsScreen extends StatelessWidget {
     identify: 'dsfdsfs123',
     date: '30/02/2021',
     status: 'open',
-    table: 'Mesa xY',
     total: (90).toDouble(),
     comment: 'Sem cebola',
     foods: [
@@ -65,7 +64,6 @@ class OrderDetailsScreen extends StatelessWidget {
           _makeTextOrder('Data', _order.date),
           _makeTextOrder('Status', _order.status),
           _makeTextOrder('Total', _order.total.toString()),
-          _makeTextOrder('Mesa', _order.table),
           _makeTextOrder('Comentário', _order.comment),
           Container(height: 30),
           Text('Comidas:',
@@ -179,7 +177,7 @@ class OrderDetailsScreen extends StatelessWidget {
             Row(
               children: <Widget>[
                 Text(
-                  "${evaluation.nameUser} - ",
+                  "${evaluation.user.name} - ",
                   style: TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold),
                 ),

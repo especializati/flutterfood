@@ -7,7 +7,6 @@ class Order {
   String identify;
   String date;
   String status;
-  String table;
   double total;
   String comment;
   List<Food> foods;
@@ -17,22 +16,28 @@ class Order {
       {this.identify,
       this.date,
       this.status,
-      this.table,
       this.total,
       this.comment,
       this.foods,
       this.evaluations});
 
   factory Order.fromJson(jsonData) {
+    List<Food> _foodsApi = (jsonData['products'] as List)
+        .map((food) => Food.fromJson(food))
+        .toList();
+
+    List<Evaluation> _evaluationsApi = (jsonData['evaluations'] as List)
+        .map((evaluation) => Evaluation.fromJson(evaluation))
+        .toList();
+
     return Order(
       identify: jsonData['identify'],
       date: jsonData['date'],
       status: jsonData['status'],
-      table: jsonData['table'],
       total: double.parse(jsonData['total']),
       comment: jsonData['comment'],
-      foods: jsonData['foods'],
-      evaluations: jsonData['evaluations'],
+      foods: _foodsApi,
+      evaluations: _evaluationsApi,
     );
   }
 
@@ -41,7 +46,6 @@ class Order {
       'identify': identify,
       'date': date,
       'status': status,
-      'table': table,
       'total': total,
       'comment': comment,
       'foods': foods,

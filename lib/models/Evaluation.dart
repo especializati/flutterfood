@@ -1,15 +1,17 @@
 import 'dart:convert';
 
+import './User.dart';
+
 class Evaluation {
-  String nameUser;
+  User user;
   String comment;
   double stars;
 
-  Evaluation({this.nameUser, this.comment, this.stars});
+  Evaluation({this.user, this.comment, this.stars});
 
   factory Evaluation.fromJson(jsonData) {
     return Evaluation(
-      nameUser: jsonData['nameUser'],
+      user: User.fromJson(jsonData['client']),
       comment: jsonData['comment'],
       stars: jsonData['stars'],
     );
@@ -17,7 +19,7 @@ class Evaluation {
 
   toJson() {
     return jsonEncode({
-      'nameUser': nameUser,
+      'user': user,
       'comment': comment,
       'stars': stars,
     });
