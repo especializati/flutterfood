@@ -63,10 +63,12 @@ class AuthRepository {
 
       return User.fromJson(response.data['data']);
     } on DioError catch (e) {
-      print(e.toString());
-      print(e.response);
-      print(e.response.statusCode);
-      print(e.response.data);
+      return Future.error({});
+
+      // print(e.toString());
+      // print(e.response);
+      // print(e.response.statusCode);
+      // print(e.response.data);
     }
   }
 

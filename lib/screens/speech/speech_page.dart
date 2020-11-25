@@ -22,14 +22,11 @@ class _SpeechScreenState extends State<SpeechScreen> {
 
     SystemChrome.setEnabledSystemUIOverlays([]);
 
-    _checkAuth().then((bool isAuthenticated) {
-      if (isAuthenticated) {
-        Navigator.pushReplacementNamed(context, '/restaurants');
-        return;
-      }
-
-      Navigator.pushReplacementNamed(context, '/login');
-    });
+    _checkAuth()
+        .then(
+            (value) => Navigator.pushReplacementNamed(context, '/restaurants'))
+        .catchError(
+            (error) => Navigator.pushReplacementNamed(context, '/login'));
   }
 
   @override
@@ -64,15 +61,20 @@ class _SpeechScreenState extends State<SpeechScreen> {
     );
   }
 
-  Future<bool> _checkAuth() async {
+  Future _checkAuth() async {
     final String token = await storage.read(key: 'token_sanctum');
 
     if (token != null) {
-      final bool isAuthenticated = await _authStore.getMe();
+      return await _authStore
+          .getMe()
+          .then((value) => Future.value())
+          .catchError((error) async {
+        await storage.delete(key: 'token_sanctum');
 
-      return isAuthenticated;
+        return Future.error({});
+      });
     }
 
-    return false;
+    return Future.error({});
   }
 }
