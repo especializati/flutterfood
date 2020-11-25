@@ -26,6 +26,7 @@ class AuthRepository {
 
       return response;
     } on DioError catch (e) {
+      Future.error({});
       print(e.toString());
       print(e.response);
       print(e.response.statusCode);
