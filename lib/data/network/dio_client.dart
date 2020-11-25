@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import './Exceptions/api_exception.dart';
 import './interceptors/dio_interceptor.dart';
 
 class DioClient {
@@ -16,9 +17,10 @@ class DioClient {
           await _dio.get(url, queryParameters: queryParameters);
 
       return response;
-    } catch (e) {
-      print(e.toString());
-      throw e;
+    } on DioError catch (e) {
+      Future.error({});
+
+      ApiException(e.response);
     }
   }
 
@@ -29,9 +31,10 @@ class DioClient {
           data: formData, queryParameters: queryParameters);
 
       return response;
-    } catch (e) {
-      print(e.toString());
-      throw e;
+    } on DioError catch (e) {
+      Future.error({});
+
+      ApiException(e.response);
     }
   }
 }
