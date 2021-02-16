@@ -1,6 +1,6 @@
-# flutterfood
+# FlutterFood - O Curso
 
-A new Flutter project.
+[Curso FlutterFood](https://academy.especializati.com.br/curso/flutter-food)
 
 ## Getting Started
 
